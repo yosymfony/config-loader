@@ -52,7 +52,7 @@ class Config
      * @param string $resource A resource
      * @param string $type     The resource type. Don't set this argument in files case.
      *
-     * @return ConfigRepositoryInterface
+     * @return RepositoryInterface
      *
      * @throws Symfony\Component\Config\Exception\FileLoaderLoadException If the loader not found.
      * @throws \UnexpectedValueException If the loader not return a repository instance

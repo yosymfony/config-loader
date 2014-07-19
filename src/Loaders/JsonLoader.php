@@ -70,6 +70,9 @@ class JsonLoader extends ConfigFileLoader
         return file_get_contents($resource);
     }
     
+    /**
+     * @param integer $errorCode
+     */
     private function getLastErrorMessage($errorCode)
     {
         $errors = array(

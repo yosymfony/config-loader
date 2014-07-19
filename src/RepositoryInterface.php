@@ -25,6 +25,8 @@ interface RepositoryInterface extends RepositoryOperationInterface, \ArrayAccess
      * 
      * @param mixed $data
      * 
+     * @return void
+     * 
      * @throws \InvalidArgumentException When argument is not valid
      */
     public function load($data);
@@ -51,6 +53,8 @@ interface RepositoryInterface extends RepositoryOperationInterface, \ArrayAccess
      * Delete a key
      * 
      * @param string $key Key name
+     * 
+     * @return void
      */
     public function del($key);
     
@@ -58,6 +62,8 @@ interface RepositoryInterface extends RepositoryOperationInterface, \ArrayAccess
      * Validate the configurations values
      * 
      * @param ConfigurationInterface $definition The rules
+     * 
+     * @return void
      * 
      * @throws \Exception If any value is not of the expected type, is mandatory and yet undefined, or could not be validated in some other way
      */
