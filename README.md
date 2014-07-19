@@ -5,6 +5,10 @@ A configuration loader with support for YAML, TOML (0.2.0) and JSON.
 
 Inspired by [Yosymfony\ConfigServiceProvider](https://github.com/yosymfony/ConfigServiceProvider).
 
+[![Build Status](https://travis-ci.org/yosymfony/Config-loader.png?branch=master)](https://travis-ci.org/yosymfony/Config-loader)
+[![Latest Stable Version](https://poser.pugx.org/yosymfony/config-loader/v/stable.png)](https://packagist.org/packages/yosymfony/config-loader)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/yosymfony/Config-loader/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/yosymfony/Config-loader/?branch=master)
+
 Installation
 ------------
 
