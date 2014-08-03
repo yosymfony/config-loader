@@ -16,7 +16,7 @@ use Yosymfony\ConfigLoader\Repository;
 
 /**
  * JSON file loader
- * 
+ *
  * @author Victor Puertas <vpgugr@gmail.com>
  */
 class JsonLoader extends ConfigFileLoader
@@ -26,32 +26,28 @@ class JsonLoader extends ConfigFileLoader
      */
     public function load($resource, $type = null)
     {
-        if(null === $type)
-        {
+        if (null === $type) {
             $resource = $this->getLocation($resource);
             $data = $this->loadFile($resource);
-        }
-        else
-        {
+        } else {
             $data = $resource;
         }
-        
+
         $parsed = $this->parseResource($data);
         $errorMsg = $this->getLastErrorMessage(json_last_error());
-        
-        if($errorMsg)
-        {
+
+        if ($errorMsg) {
             $msg = $type ? sprintf("JSON parse error: %s", $errorMsg) : sprintf("JSON parse error: %s at %s", $errorMsg, $resource);
-            
+
             throw new \RuntimeException($msg);
         }
-        
+
         $repository = new Repository();
         $repository->load($parsed ? $parsed : array());
-        
+
         return $repository;
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -59,17 +55,17 @@ class JsonLoader extends ConfigFileLoader
     {
         return 'json' === $type || (is_string($resource) && preg_match('#\.json(\.dist)?$#', $resource));
     }
-    
+
     private function parseResource($resource)
     {
         return json_decode($resource, true);
     }
-    
+
     private function loadFile($resource)
     {
         return file_get_contents($resource);
     }
-    
+
     /**
      * @param integer $errorCode
      */
@@ -83,7 +79,7 @@ class JsonLoader extends ConfigFileLoader
             JSON_ERROR_SYNTAX           => 'Syntax error, malformed JSON',
             JSON_ERROR_UTF8             => 'Malformed UTF-8 characters, possibly incorrectly encoded',
         );
-        
+
         return array_key_exists($errorCode, $errors) ? $errors[$errorCode] : sprintf('Unknown error code: %s', $errorCode);
     }
 }
