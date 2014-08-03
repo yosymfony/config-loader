@@ -17,30 +17,28 @@ use Yosymfony\ConfigLoader\Repository;
 
 /**
  * TOML file loader
- * 
+ *
  * @author Victor Puertas <vpgugr@gmail.com>
  */
 class TomlLoader extends ConfigFileLoader
 {
     public function load($resource, $type = null)
     {
-        if (false == class_exists('Yosymfony\Toml\Toml'))
-        {
+        if (false == class_exists('Yosymfony\Toml\Toml')) {
             throw new \RuntimeException('Yosymfony\Toml parser is required to read toml files.');
         }
-        
-        if(null === $type)
-        {
+
+        if (null === $type) {
             $resource = $this->getLocation($resource);
         }
-        
+
         $data = Toml::parse($resource);
         $repository = new Repository();
         $repository->load($data ? $data : array());
-        
+
         return $repository;
     }
-    
+
     public function supports($resource, $type = null)
     {
         return 'toml' === $type || (is_string($resource) && preg_match('#\.toml(\.dist)?$#', $resource));

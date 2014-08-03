@@ -8,7 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
+
 namespace Yosymfony\ConfigLoader;
 
 use Symfony\Component\Config\Definition\Processor;
@@ -16,26 +16,25 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 /**
  * Simple implementation of a configuration repository
- * 
+ *
  * @author Victor Puertas <vpgugr@gmail.com>
  */
 class Repository implements RepositoryInterface
-{    
+{
     protected $repository = array();
-    
+
     /**
      * {@inheritdoc}
      */
     public function load($configuration)
     {
-        if(!is_array($configuration))
-        {
+        if (!is_array($configuration)) {
             throw new \InvalidArgumentException('This repository only accept configuration from arrays');
         }
-        
+
         $this->repository = $configuration;
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -43,7 +42,7 @@ class Repository implements RepositoryInterface
     {
         return isset($this->repository[$key]) ? $this->repository[$key] : $default;
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -51,79 +50,72 @@ class Repository implements RepositoryInterface
     {
         $this->offsetSet($key, $value);
     }
-    
+
     /**
      * {@inheritdoc}
      */
     public function del($key)
     {
-        if(array_key_exists($key, $this->repository))
-        {
+        if (array_key_exists($key, $this->repository)) {
             unset($this->repository[$key]);
         }
     }
-    
+
     /**
      * {@inheritdoc}
      */
     public function union(RepositoryInterface $repository)
     {
-        $union = function($main, $second)
-        {
+        $union = function ($main, $second) {
             $result = new Repository();
-            
-            foreach($main as $key => $value)
-            {
+
+            foreach ($main as $key => $value) {
                 $result[$key] = $value;
             }
-            
-            foreach($second as $key => $value)
-            {
-                if(!isset($main[$key]))
-                {
+
+            foreach ($second as $key => $value) {
+                if (!isset($main[$key])) {
                     $result[$key] = $value;
                 }
             }
-            
+
             return $result;
         };
-        
+
         return $union($this, $repository);
     }
-    
+
     /**
      * {@inheritdoc}
      */
     public function intersection(RepositoryInterface $repository)
     {
-        $interception = function($main, $second)
-        {
+        $interception = function ($main, $second) {
             $result = new Repository();
             $keysMain = array_keys($main->getArray());
             $keysSecond = array_keys($second->getArray());
             $keys = array_intersect($keysMain, $keysSecond);
-            
-            foreach($keys as $key)
-            {
+
+            foreach ($keys as $key) {
                 $result[$key] = $main[$key];
             }
-            
+
             return $result;
         };
-        
+
         return $interception($this, $repository);
     }
-    
+
     /**
      * {@inheritdoc }
      */
     public function validateWith(ConfigurationInterface $definition)
     {
         $processor = new Processor();
-        
+
         $processor->processConfiguration($definition, array($this->getArray()));
     }
-    
+
     /**
      * {@inheritdoc }
      */
@@ -131,7 +123,7 @@ class Repository implements RepositoryInterface
     {
         return $this->repository;
     }
-    
+
     /**
      * {@inheritdoc }
      */
@@ -139,7 +131,7 @@ class Repository implements RepositoryInterface
     {
         return $this->repository;
     }
-    
+
     /**
      * Set a new key (From ArrayAccess interface)
      */
@@ -151,7 +143,7 @@ class Repository implements RepositoryInterface
             $this->repository[$offset] = $value;
         }
     }
-    
+
     /**
      * Check if a key exists (from ArrayAccess interface)
      */
@@ -159,7 +151,7 @@ class Repository implements RepositoryInterface
     {
         return isset($this->repository[$offset]);
     }
-    
+
     /**
      * Delete a key (from ArrayAccess interface)
      */
@@ -167,7 +159,7 @@ class Repository implements RepositoryInterface
     {
         unset($this->repository[$offset]);
     }
-    
+
     /**
      * Retrueve a key (from ArrayAccess interface)
      */
@@ -175,7 +167,7 @@ class Repository implements RepositoryInterface
     {
         return isset($this->repository[$offset]) ? $this->repository[$offset] : null;
     }
-    
+
     /**
      * Count of element of a repository (from Countable interface)
      */
@@ -183,43 +175,43 @@ class Repository implements RepositoryInterface
     {
         return count($this->repository);
     }
-    
+
     /**
      * Set the pointer to the first element (from Iterator interface)
      */
-    public function rewind() 
+    public function rewind()
     {
         return reset($this->repository);
     }
-    
+
     /**
      * Get the current element (from Iterator interface)
      */
-    public function current() 
+    public function current()
     {
         return current($this->repository);
     }
-    
+
     /**
      * Get the current position (from Iterator interface)
      */
-    public function key() 
+    public function key()
     {
         return key($this->repository);
     }
-    
+
     /**
      * Set the pointer to the next element (from Iterator interface)
      */
-    public function next() 
+    public function next()
     {
         return next($this->repository);
     }
-    
+
     /**
      * Checks if the current position is valid (from Iterator interface)
      */
-    public function valid() 
+    public function valid()
     {
         return key($this->repository) !== null;
     }
