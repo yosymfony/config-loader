@@ -20,7 +20,7 @@
     },
     "suggest": {
         "yosymfony/toml": "0.2.*@dev",
-        "symfony/yaml": "2.4.*@dev"
+        "symfony/yaml": "2.6.*@dev"
     },
     "autoload": {
         "psr-4": { "Yosymfony\\ConfigLoader\\": "src/" }
