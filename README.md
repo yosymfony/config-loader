@@ -70,7 +70,7 @@ This library have support to `.dist` files. The location of a file follow the ne
 $repository = $config->load('server: "mail.yourname.com"', Config::TYPE_YAML);
 // or
 $repository = $config->load('server = "mail.yourname.com"', Config::TYPE_TOML);
-``
+```
 
 Repository
 ----------
