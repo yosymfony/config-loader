@@ -24,13 +24,11 @@ class TomlLoader extends ConfigFileLoader
 {
     public function load($resource, $type = null)
     {
-        if (false == class_exists('Yosymfony\Toml\Toml'))
-        {
+        if (false == class_exists('Yosymfony\Toml\Toml')) {
             throw new \RuntimeException('Yosymfony\Toml parser is required to read toml files.');
         }
 
-        if(null === $type)
-        {
+        if (null === $type) {
             $resource = $this->getLocation($resource);
         }
 

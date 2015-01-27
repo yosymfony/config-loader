@@ -24,13 +24,11 @@ class YamlLoader extends ConfigFileLoader
 {
     public function load($resource, $type = null)
     {
-        if (false == class_exists('Symfony\Component\Yaml\Yaml'))
-        {
+        if (false == class_exists('Symfony\Component\Yaml\Yaml')) {
             throw new \RuntimeException('Symfony\Component\Yaml\Yaml parser is required to read yaml files.');
         }
 
-        if(null === $type)
-        {
+        if (null === $type) {
             $resource = $this->getLocation($resource);
         }
 

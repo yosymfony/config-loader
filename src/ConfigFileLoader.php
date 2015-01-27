@@ -37,15 +37,11 @@ abstract class ConfigFileLoader extends FileLoader
      */
     public function getLocation($resource)
     {
-        if(false === $this->isDistExtension($resource))
-        {
-            try
-            {
+        if (false === $this->isDistExtension($resource)) {
+            try {
                 return $this->getLocator()->locate($resource, null, true);
-            }
-            catch (\InvalidArgumentException $ex)
-            {
-                $resource =  $resource . '.dist';
+            } catch (\InvalidArgumentException $ex) {
+                $resource =  $resource.'.dist';
             }
         }
 
@@ -67,8 +63,8 @@ abstract class ConfigFileLoader extends FileLoader
     /**
      * Parses the repositories "imports" similar to the Symfony Dependency Injector's YamlFileLoader
      *
-     * @param  Repository $repository
-     * @param  string    $file
+     * @param  Repository                                                                     $repository
+     * @param  string                                                                         $file
      * @return array|void
      * @throws \Exception
      * @throws \Symfony\Component\Config\Exception\FileLoaderImportCircularReferenceException
@@ -76,23 +72,19 @@ abstract class ConfigFileLoader extends FileLoader
      */
     protected function parseImports(Repository $repository, $file)
     {
-        if (!isset($repository['imports']))
-        {
+        if (!isset($repository['imports'])) {
             return $repository;
         }
 
-        if (!is_array($repository['imports']))
-        {
+        if (!is_array($repository['imports'])) {
             throw new \InvalidArgumentException(sprintf('The "imports" key should contain an array in %s. Check your YAML syntax.', $file));
         }
 
-        foreach ($repository['imports'] as $import)
-        {
-            if (!is_array($import))
-            {
+        foreach ($repository['imports'] as $import) {
+            if (!is_array($import)) {
                 $import = array('resource' => $import);
             }
-            $ignoreErrors = isset($import['ignore_errors']) ? (bool)$import['ignore_errors'] : false;
+            $ignoreErrors = isset($import['ignore_errors']) ? (bool) $import['ignore_errors'] : false;
             $repository   = $repository->union($this->import($import['resource'], null, $ignoreErrors, $file));
         }
 

@@ -28,8 +28,7 @@ class Repository implements RepositoryInterface
      */
     public function load($configuration)
     {
-        if(!is_array($configuration))
-        {
+        if (!is_array($configuration)) {
             throw new \InvalidArgumentException('This repository only accept configuration from arrays');
         }
 
@@ -57,8 +56,7 @@ class Repository implements RepositoryInterface
      */
     public function del($key)
     {
-        if(array_key_exists($key, $this->repository))
-        {
+        if (array_key_exists($key, $this->repository)) {
             unset($this->repository[$key]);
         }
     }
@@ -68,17 +66,12 @@ class Repository implements RepositoryInterface
      */
     public function union(RepositoryInterface $repository)
     {
-        $union = function(array $r1, array $r2) use (&$union)
-        {
+        $union = function (array $r1, array $r2) use (&$union) {
             $res = $r1;
-            foreach ($r2 as $k => $v)
-            {
-                if (isset($res[$k]) && is_array($r1[$k]))
-                {
+            foreach ($r2 as $k => $v) {
+                if (isset($res[$k]) && is_array($r1[$k])) {
                     $res[$k] = $union($r1[$k], $v);
-                }
-                elseif (!isset($res[$k]))
-                {
+                } elseif (!isset($res[$k])) {
                     $res[$k] = $v;
                 }
             }
@@ -97,15 +90,13 @@ class Repository implements RepositoryInterface
      */
     public function intersection(RepositoryInterface $repository)
     {
-        $interception = function($main, $second)
-        {
+        $interception = function ($main, $second) {
             $result = new Repository();
             $keysMain = array_keys($main->getArray());
             $keysSecond = array_keys($second->getArray());
             $keys = array_intersect($keysMain, $keysSecond);
 
-            foreach($keys as $key)
-            {
+            foreach ($keys as $key) {
                 $result[$key] = $main[$key];
             }
 

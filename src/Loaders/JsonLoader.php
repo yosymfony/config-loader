@@ -26,21 +26,17 @@ class JsonLoader extends ConfigFileLoader
      */
     public function load($resource, $type = null)
     {
-        if(null === $type)
-        {
+        if (null === $type) {
             $resource = $this->getLocation($resource);
             $data = $this->loadFile($resource);
-        }
-        else
-        {
+        } else {
             $data = $resource;
         }
 
         $parsed = $this->parseResource($data);
         $errorMsg = $this->getLastErrorMessage(json_last_error());
 
-        if($errorMsg)
-        {
+        if ($errorMsg) {
             $msg = $type ? sprintf("JSON parse error: %s", $errorMsg) : sprintf("JSON parse error: %s at %s", $errorMsg, $resource);
 
             throw new \RuntimeException($msg);
