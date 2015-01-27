@@ -63,8 +63,8 @@ abstract class ConfigFileLoader extends FileLoader
     /**
      * Parses the repositories "imports" similar to the Symfony Dependency Injector's YamlFileLoader
      *
-     * @param  Repository                                                                     $repository
-     * @param  string                                                                         $file
+     * @param  Repository  $repository
+     * @param  string      $file
      * @return array|void
      * @throws \Exception
      * @throws \Symfony\Component\Config\Exception\FileLoaderImportCircularReferenceException
