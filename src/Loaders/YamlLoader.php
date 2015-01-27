@@ -17,7 +17,7 @@ use Yosymfony\ConfigLoader\Repository;
 
 /**
  * YAML file loader
- * 
+ *
  * @author Victor Puertas <vpgugr@gmail.com>
  */
 class YamlLoader extends ConfigFileLoader
@@ -28,19 +28,19 @@ class YamlLoader extends ConfigFileLoader
         {
             throw new \RuntimeException('Symfony\Component\Yaml\Yaml parser is required to read yaml files.');
         }
-        
+
         if(null === $type)
         {
             $resource = $this->getLocation($resource);
         }
-        
+
         $data = Yaml::parse($resource);
         $repository = new Repository();
         $repository->load($data ? $data : array());
-        
-        return $repository;
+
+        return $this->parseImports($repository, $resource);
     }
-    
+
     public function supports($resource, $type = null)
     {
         return 'yaml' === $type || (is_string($resource) && preg_match('#\.yml(\.dist)?$#', $resource));
