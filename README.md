@@ -52,7 +52,6 @@ class MyClass
 
 ```php
 $config->load('user.yml');
-
 // or load with absolute path:
 $config->load('/var/config/user1.yml');
 ```
@@ -70,6 +69,36 @@ This library have support to `.dist` files. The location of a file follow the ne
 $repository = $config->load('server: "mail.yourname.com"', Config::TYPE_YAML);
 // or
 $repository = $config->load('server = "mail.yourname.com"', Config::TYPE_TOML);
+```
+### Importing files
+
+This library has support for importing files as Symfony’s Dependency Injection component does.
+In the below example a YAML file imports three files:
+
+```yaml
+---
+imports:
+  - config-imported.yml
+  - config-imported.toml
+  - config-imported.json
+```
+
+Similar example using JSON:
+
+```json
+{
+  "imports": [
+    "config.json"
+  ]
+}
+```
+
+Example using TOML:
+
+```
+imports = [
+    "config.toml"
+]
 ```
 
 Repository
