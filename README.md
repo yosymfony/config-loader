@@ -1,7 +1,7 @@
 Config loader for PHP
 =====================
 
-A configuration loader with support for YAML, TOML (0.2.0) and JSON.
+A configuration loader with support for YAML, TOML (0.4.0) and JSON.
 
 Inspired by [Yosymfony\ConfigServiceProvider](https://github.com/yosymfony/ConfigServiceProvider).
 
