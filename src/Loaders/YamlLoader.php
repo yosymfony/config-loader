@@ -16,7 +16,7 @@ use Yosymfony\ConfigLoader\ConfigFileLoader;
 use Yosymfony\ConfigLoader\Repository;
 
 /**
- * YAML file loader
+ * YAML file loader.
  *
  * @author Victor Puertas <vpgugr@gmail.com>
  */
@@ -30,6 +30,14 @@ class YamlLoader extends ConfigFileLoader
 
         if (null === $type) {
             $resource = $this->getLocation($resource);
+        }
+
+        if (is_file($resource)) {
+            if (!is_readable($resource)) {
+                throw new ParseException(sprintf('Unable to parse "%s" as the file is not readable.', $resource));
+            }
+
+            $resource = file_get_contents($resource);
         }
 
         $data = Yaml::parse($resource);
