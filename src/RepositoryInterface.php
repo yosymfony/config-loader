@@ -14,25 +14,23 @@ namespace Yosymfony\ConfigLoader;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 /**
- * Interface that must be implemented by configuration repositories
+ * Interface that must be implemented by configuration repositories.
  *
  * @author Victor Puertas <vpgugr@gmail.com>
  */
 interface RepositoryInterface extends RepositoryOperationInterface, \ArrayAccess, \Countable, \Iterator
 {
     /**
-     * Load data repository
+     * Load data repository.
      *
      * @param mixed $data
-     *
-     * @return void
      *
      * @throws \InvalidArgumentException When argument is not valid
      */
     public function load($data);
 
     /**
-     * Get value from the key
+     * Get value from the key.
      *
      * @param string $key     Key name
      * @param mixed  $default Default value
@@ -42,7 +40,7 @@ interface RepositoryInterface extends RepositoryOperationInterface, \ArrayAccess
     public function get($key, $default);
 
     /**
-     * Set value to a key
+     * Set value to a key.
      *
      * @param string $key   The key name
      * @param mixed  $value The value
@@ -50,34 +48,30 @@ interface RepositoryInterface extends RepositoryOperationInterface, \ArrayAccess
     public function set($key, $value);
 
     /**
-     * Delete a key
+     * Delete a key.
      *
      * @param string $key Key name
-     *
-     * @return void
      */
     public function del($key);
 
     /**
-     * Validate the configurations values
+     * Validate the configurations values.
      *
      * @param ConfigurationInterface $definition The rules
-     *
-     * @return void
      *
      * @throws \Exception If any value is not of the expected type, is mandatory and yet undefined, or could not be validated in some other way
      */
     public function validateWith(ConfigurationInterface $definition);
 
     /**
-     * Get the repository's raw representation
+     * Get the repository's raw representation.
      *
      * @return mixed
      */
     public function getRaw();
 
     /**
-     * Get an array representation
+     * Get an array representation.
      *
      * @return array
      */

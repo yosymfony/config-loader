@@ -14,7 +14,7 @@ namespace Yosymfony\ConfigLoader;
 use Symfony\Component\Config\Loader\FileLoader;
 
 /**
- * Abstract class used by built-in loaders
+ * Abstract class used by built-in loaders.
  *
  * @author Victor Puertas <vpgugr@gmail.com>
  */
@@ -23,7 +23,7 @@ abstract class ConfigFileLoader extends FileLoader
     /**
      * Get the location of a file resource follow the next hierachy:
      *    1. filename.ext
-     *    2. filename.ext.dist (if filename.ext not exists)
+     *    2. filename.ext.dist (if filename.ext not exists).
      *
      *    or
      *
@@ -41,7 +41,7 @@ abstract class ConfigFileLoader extends FileLoader
             try {
                 return $this->getLocator()->locate($resource, null, true);
             } catch (\InvalidArgumentException $ex) {
-                $resource =  $resource.'.dist';
+                $resource = $resource.'.dist';
             }
         }
 
@@ -61,11 +61,13 @@ abstract class ConfigFileLoader extends FileLoader
     }
 
     /**
-     * Parses the repositories "imports" similar to the Symfony Dependency Injector's YamlFileLoader
+     * Parses the repositories "imports" similar to the Symfony Dependency Injector's YamlFileLoader.
      *
-     * @param  Repository  $repository
-     * @param  string      $file
+     * @param Repository $repository
+     * @param string     $file
+     *
      * @return array|void
+     *
      * @throws \Exception
      * @throws \Symfony\Component\Config\Exception\FileLoaderImportCircularReferenceException
      * @throws \Symfony\Component\Config\Exception\FileLoaderLoadException
@@ -85,7 +87,7 @@ abstract class ConfigFileLoader extends FileLoader
                 $import = array('resource' => $import);
             }
             $ignoreErrors = isset($import['ignore_errors']) ? (bool) $import['ignore_errors'] : false;
-            $repository   = $repository->union($this->import($import['resource'], null, $ignoreErrors, $file));
+            $repository = $repository->union($this->import($import['resource'], null, $ignoreErrors, $file));
         }
 
         return $repository;

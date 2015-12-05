@@ -15,7 +15,7 @@ use Symfony\Component\Config\Loader\LoaderResolver;
 use Symfony\Component\Config\Loader\DelegatingLoader;
 
 /**
- * Load configurations and create repositories
+ * Load configurations and create repositories.
  *
  * @author Victor Puertas <vpgugr@gmail.com>
  */
@@ -30,7 +30,7 @@ class Config
     private $delegatingLoader;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param array $loaders
      */
@@ -46,7 +46,7 @@ class Config
     }
 
     /**
-     * Loads a resource like file or inline configuration
+     * Loads a resource like file or inline configuration.
      *
      * @param string $resource A resource
      * @param string $type     The resource type. Don't set this argument in files case.

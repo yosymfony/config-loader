@@ -16,7 +16,7 @@ use Yosymfony\ConfigLoader\ConfigFileLoader;
 use Yosymfony\ConfigLoader\Repository;
 
 /**
- * TOML file loader
+ * TOML file loader.
  *
  * @author Victor Puertas <vpgugr@gmail.com>
  */

@@ -15,7 +15,7 @@ use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 /**
- * Simple implementation of a configuration repository
+ * Simple implementation of a configuration repository.
  *
  * @author Victor Puertas <vpgugr@gmail.com>
  */
@@ -79,7 +79,7 @@ class Repository implements RepositoryInterface
             return $res;
         };
 
-        $repo = new Repository();
+        $repo = new self();
         $repo->load($union($this->getArray(), $repository->getArray()));
 
         return $repo;
@@ -107,7 +107,7 @@ class Repository implements RepositoryInterface
     }
 
     /**
-     * {@inheritdoc }
+     * {@inheritdoc}.
      */
     public function validateWith(ConfigurationInterface $definition)
     {
@@ -117,7 +117,7 @@ class Repository implements RepositoryInterface
     }
 
     /**
-     * {@inheritdoc }
+     * {@inheritdoc}.
      */
     public function getArray()
     {
@@ -125,7 +125,7 @@ class Repository implements RepositoryInterface
     }
 
     /**
-     * {@inheritdoc }
+     * {@inheritdoc}.
      */
     public function getRaw()
     {
@@ -133,7 +133,7 @@ class Repository implements RepositoryInterface
     }
 
     /**
-     * Set a new key (From ArrayAccess interface)
+     * Set a new key (From ArrayAccess interface).
      */
     public function offsetSet($offset, $value)
     {
@@ -145,7 +145,7 @@ class Repository implements RepositoryInterface
     }
 
     /**
-     * Check if a key exists (from ArrayAccess interface)
+     * Check if a key exists (from ArrayAccess interface).
      */
     public function offsetExists($offset)
     {
@@ -153,7 +153,7 @@ class Repository implements RepositoryInterface
     }
 
     /**
-     * Delete a key (from ArrayAccess interface)
+     * Delete a key (from ArrayAccess interface).
      */
     public function offsetUnset($offset)
     {
@@ -161,7 +161,7 @@ class Repository implements RepositoryInterface
     }
 
     /**
-     * Retrueve a key (from ArrayAccess interface)
+     * Retrueve a key (from ArrayAccess interface).
      */
     public function offsetGet($offset)
     {
@@ -169,7 +169,7 @@ class Repository implements RepositoryInterface
     }
 
     /**
-     * Count of element of a repository (from Countable interface)
+     * Count of element of a repository (from Countable interface).
      */
     public function count()
     {
@@ -177,7 +177,7 @@ class Repository implements RepositoryInterface
     }
 
     /**
-     * Set the pointer to the first element (from Iterator interface)
+     * Set the pointer to the first element (from Iterator interface).
      */
     public function rewind()
     {
@@ -185,7 +185,7 @@ class Repository implements RepositoryInterface
     }
 
     /**
-     * Get the current element (from Iterator interface)
+     * Get the current element (from Iterator interface).
      */
     public function current()
     {
@@ -193,7 +193,7 @@ class Repository implements RepositoryInterface
     }
 
     /**
-     * Get the current position (from Iterator interface)
+     * Get the current position (from Iterator interface).
      */
     public function key()
     {
@@ -201,7 +201,7 @@ class Repository implements RepositoryInterface
     }
 
     /**
-     * Set the pointer to the next element (from Iterator interface)
+     * Set the pointer to the next element (from Iterator interface).
      */
     public function next()
     {
@@ -209,7 +209,7 @@ class Repository implements RepositoryInterface
     }
 
     /**
-     * Checks if the current position is valid (from Iterator interface)
+     * Checks if the current position is valid (from Iterator interface).
      */
     public function valid()
     {

@@ -12,7 +12,7 @@
 namespace Yosymfony\ConfigLoader;
 
 /**
- * Interface of operations with repositories
+ * Interface of operations with repositories.
  *
  * @author Victor Puertas <vpgugr@gmail.com>
  */
@@ -20,7 +20,7 @@ interface RepositoryOperationInterface
 {
     /**
      * Union the repository with $repository. The values of $repository have
-     * less precedence
+     * less precedence.
      *
      * @param RepositoryInterface $repository
      *
@@ -30,7 +30,7 @@ interface RepositoryOperationInterface
 
     /**
      * Intersection the repository with $repository. The values of $repository have
-     * less precedence
+     * less precedence.
      *
      * @param RepositoryInterface $repository
      *

@@ -15,7 +15,7 @@ use Yosymfony\ConfigLoader\ConfigFileLoader;
 use Yosymfony\ConfigLoader\Repository;
 
 /**
- * JSON file loader
+ * JSON file loader.
  *
  * @author Victor Puertas <vpgugr@gmail.com>
  */
@@ -37,7 +37,7 @@ class JsonLoader extends ConfigFileLoader
         $errorMsg = $this->getLastErrorMessage(json_last_error());
 
         if ($errorMsg) {
-            $msg = $type ? sprintf("JSON parse error: %s", $errorMsg) : sprintf("JSON parse error: %s at %s", $errorMsg, $resource);
+            $msg = $type ? sprintf('JSON parse error: %s', $errorMsg) : sprintf('JSON parse error: %s at %s', $errorMsg, $resource);
 
             throw new \RuntimeException($msg);
         }
@@ -67,17 +67,17 @@ class JsonLoader extends ConfigFileLoader
     }
 
     /**
-     * @param integer $errorCode
+     * @param int $errorCode
      */
     private function getLastErrorMessage($errorCode)
     {
         $errors = array(
-            JSON_ERROR_NONE             => null,
-            JSON_ERROR_DEPTH            => 'Maximum stack depth exceeded',
-            JSON_ERROR_STATE_MISMATCH   => 'Underflow or the modes mismatch',
-            JSON_ERROR_CTRL_CHAR        => 'Unexpected control character found',
-            JSON_ERROR_SYNTAX           => 'Syntax error, malformed JSON',
-            JSON_ERROR_UTF8             => 'Malformed UTF-8 characters, possibly incorrectly encoded',
+            JSON_ERROR_NONE => null,
+            JSON_ERROR_DEPTH => 'Maximum stack depth exceeded',
+            JSON_ERROR_STATE_MISMATCH => 'Underflow or the modes mismatch',
+            JSON_ERROR_CTRL_CHAR => 'Unexpected control character found',
+            JSON_ERROR_SYNTAX => 'Syntax error, malformed JSON',
+            JSON_ERROR_UTF8 => 'Malformed UTF-8 characters, possibly incorrectly encoded',
         );
 
         return array_key_exists($errorCode, $errors) ? $errors[$errorCode] : sprintf('Unknown error code: %s', $errorCode);
