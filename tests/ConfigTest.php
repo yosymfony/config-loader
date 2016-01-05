@@ -98,7 +98,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function testJsonInlineFail()
     {
-        $repository = $this->config->load('{ "var": "value"', Config::TYPE_TOML);
+        $repository = $this->config->load('{ "var": "value"', Config::TYPE_JSON);
     }
 
     /**
