@@ -15,7 +15,7 @@ use Symfony\Component\Config\Loader\LoaderResolver;
 use Symfony\Component\Config\Loader\DelegatingLoader;
 
 /**
- * Load configurations and create repositories.
+ * Loads configurations and creates repositories.
  *
  * @author Victor Puertas <vpgugr@gmail.com>
  */
@@ -46,15 +46,16 @@ class Config
     }
 
     /**
-     * Loads a resource like file or inline configuration.
+     * Loads a resource such as a file or an inline configuration.
      *
-     * @param string $resource A resource
-     * @param string $type     The resource type. Don't set this argument in files case
+     * @param string $resource Filename or string representation
+     * @param string $type     The resource type. Doesn't set this argument in
+     *                         case of a filename passes as resource
      *
      * @return RepositoryInterface
      *
      * @throws Symfony\Component\Config\Exception\FileLoaderLoadException If the loader not found
-     * @throws \UnexpectedValueException                                  If the loader not return a repository instance
+     * @throws UnexpectedValueException                                   If the loader not return a repository instance
      */
     public function load($resource, $type = null)
     {

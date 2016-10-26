@@ -21,9 +21,9 @@ use Symfony\Component\Config\Loader\FileLoader;
 abstract class ConfigFileLoader extends FileLoader
 {
     /**
-     * Get the location of a file resource follow the next hierachy:
+     * Resolve the location of a file resource follows the next hierachy:
      *    1. filename.ext
-     *    2. filename.ext.dist (if filename.ext not exists).
+     *    2. filename.ext.dist (if filename.ext does not exist).
      *
      *    or
      *
@@ -31,7 +31,7 @@ abstract class ConfigFileLoader extends FileLoader
      *
      * @param string $resource Filename path
      *
-     * @return string
+     * @return string The filename location
      *
      * @throws \InvalidArgumentException When the file is not found
      */
@@ -49,9 +49,9 @@ abstract class ConfigFileLoader extends FileLoader
     }
 
     /**
-     * The file resource have .dist extension?
+     * Has the file resource an ".dist" extension?
      *
-     * @param string $resource
+     * @param string $resource The filename
      *
      * @return bool
      */
@@ -68,9 +68,9 @@ abstract class ConfigFileLoader extends FileLoader
      *
      * @return array|void
      *
-     * @throws \Exception
-     * @throws \Symfony\Component\Config\Exception\FileLoaderImportCircularReferenceException
-     * @throws \Symfony\Component\Config\Exception\FileLoaderLoadException
+     * @throws Exception
+     * @throws Symfony\Component\Config\Exception\FileLoaderImportCircularReferenceException
+     * @throws Symfony\Component\Config\Exception\FileLoaderLoadException
      */
     protected function parseImports(Repository $repository, $file)
     {
