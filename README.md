@@ -12,7 +12,7 @@ Inspired by [Yosymfony\ConfigServiceProvider](https://github.com/yosymfony/Confi
 Installation
 ------------
 
-Use [Composer](http://getcomposer.org/) to install Config-loader package:
+Use [Composer](http://getcomposer.org/) to install this package:
 
 Add the following to your `composer.json` and run `composer update`.
 
@@ -48,7 +48,7 @@ class MyClass
 }
 ```
 
-### Load a configuration file:
+### Loading a configuration file:
 
 ```php
 $config->load('user.yml');
@@ -107,7 +107,7 @@ Repository
 
 A configuration file is loaded into a repository. A repository is a wrapper
 that follows the array access interface and exposes methods for both validating
-configurations and performing operations between repositories such as Unions
+configurations and performing operations between repositories such as unions
 or intersections.
 
 ```php
