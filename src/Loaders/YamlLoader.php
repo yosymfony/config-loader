@@ -34,7 +34,7 @@ class YamlLoader extends ConfigFileLoader
 
         if (is_file($resource)) {
             if (!is_readable($resource)) {
-                throw new ParseException(sprintf('Unable to parse "%s" as the file is not readable.', $resource));
+                throw new \RuntimeException(sprintf('Unable to parse "%s" as the file is not readable.', $resource));
             }
 
             $resource = file_get_contents($resource);
