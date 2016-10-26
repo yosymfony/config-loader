@@ -21,7 +21,7 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 interface RepositoryInterface extends RepositoryOperationInterface, \ArrayAccess, \Countable, \Iterator
 {
     /**
-     * Load data repository.
+     * Loads data of the repository.
      *
      * @param mixed $data
      *
@@ -30,7 +30,7 @@ interface RepositoryInterface extends RepositoryOperationInterface, \ArrayAccess
     public function load($data);
 
     /**
-     * Get value from the key.
+     * Returns the value associated with the key.
      *
      * @param string $key     Key name
      * @param mixed  $default Default value
@@ -40,7 +40,7 @@ interface RepositoryInterface extends RepositoryOperationInterface, \ArrayAccess
     public function get($key, $default);
 
     /**
-     * Set value to a key.
+     * Sets the value to a key.
      *
      * @param string $key   The key name
      * @param mixed  $value The value
@@ -48,14 +48,14 @@ interface RepositoryInterface extends RepositoryOperationInterface, \ArrayAccess
     public function set($key, $value);
 
     /**
-     * Delete a key.
+     * Deletes a key.
      *
      * @param string $key Key name
      */
     public function del($key);
 
     /**
-     * Validate the configurations values.
+     * Validates the configurations values.
      *
      * @param ConfigurationInterface $definition The rules
      *
@@ -64,14 +64,14 @@ interface RepositoryInterface extends RepositoryOperationInterface, \ArrayAccess
     public function validateWith(ConfigurationInterface $definition);
 
     /**
-     * Get the repository's raw representation.
+     * Returns a raw representation of the repository.
      *
      * @return mixed
      */
     public function getRaw();
 
     /**
-     * Get an array representation.
+     * Returns an array representation of the repository.
      *
      * @return array
      */
