@@ -19,8 +19,8 @@ namespace Yosymfony\ConfigLoader;
 interface RepositoryOperationInterface
 {
     /**
-     * Union the repository with $repository. The values of $repository have
-     * less precedence.
+     * Performs the union between the current repository and the repository
+     * passed as argument. The repository passed as argument has less precedence.
      *
      * @param RepositoryInterface $repository
      *
@@ -29,8 +29,8 @@ interface RepositoryOperationInterface
     public function union(RepositoryInterface $repository);
 
     /**
-     * Intersection the repository with $repository. The values of $repository have
-     * less precedence.
+     * Performs the intersection between the current repository and the repository
+     * passed as argument. The repository passed as argument has less precedence.
      *
      * @param RepositoryInterface $repository
      *
