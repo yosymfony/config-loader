@@ -12,10 +12,7 @@
 namespace Yosymfony\ConfigLoader\Tests;
 
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\Config\Definition\ConfigurationInterface;
-use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Yosymfony\ConfigLoader\Config;
-use Yosymfony\ConfigLoader\Repository;
 use Yosymfony\ConfigLoader\Loaders\TomlLoader;
 use Yosymfony\ConfigLoader\Loaders\YamlLoader;
 use Yosymfony\ConfigLoader\Loaders\JsonLoader;
@@ -40,7 +37,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         return array(
             array('json'),
             array('toml'),
-            array('yml')
+            array('yml'),
         );
     }
 
@@ -178,7 +175,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 
     public function testImportsFromDifferentFormats()
     {
-        $repository = $this->config->load("config-imports-all.yml");
+        $repository = $this->config->load('config-imports-all.yml');
         $this->assertArrayHasKey('json', $repository);
         $this->assertArrayHasKey('toml', $repository);
         $this->assertArrayHasKey('yaml', $repository);

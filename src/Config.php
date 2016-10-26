@@ -49,11 +49,11 @@ class Config
      * Loads a resource like file or inline configuration.
      *
      * @param string $resource A resource
-     * @param string $type     The resource type. Don't set this argument in files case.
+     * @param string $type     The resource type. Don't set this argument in files case
      *
      * @return RepositoryInterface
      *
-     * @throws Symfony\Component\Config\Exception\FileLoaderLoadException If the loader not found.
+     * @throws Symfony\Component\Config\Exception\FileLoaderLoadException If the loader not found
      * @throws \UnexpectedValueException                                  If the loader not return a repository instance
      */
     public function load($resource, $type = null)

@@ -194,14 +194,14 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
 
     public function testRepositoryUnionIsRecursive()
     {
-        $r1       = $this->config->load('config-merge-to.json');
-        $r2       = $this->config->load('config-merge-from.json');
-        $r3       = $r1->union($r2);
+        $r1 = $this->config->load('config-merge-to.json');
+        $r2 = $this->config->load('config-merge-from.json');
+        $r3 = $r1->union($r2);
         $expected = array(
             'default' => array(
-                'port'   => 25,
-                'server' => 'mail.example.com'
-            )
+                'port' => 25,
+                'server' => 'mail.example.com',
+            ),
         );
 
         $this->assertEquals($expected, $r3->getArray());
@@ -209,7 +209,7 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
 }
 
 /**
- * Configuration Definitions rules example for test purpose
+ * Configuration Definitions rules example for test purpose.
  */
 class ConfigDefinitions implements ConfigurationInterface
 {
