@@ -32,7 +32,7 @@ class YamlLoader extends ConfigFileLoader
             $resource = $this->getLocation($resource);
         }
 
-        if (is_file($resource)) {
+        if ((!is_string($resource) || strlen($resource)<4096) && is_file($resource)) {
             if (!is_readable($resource)) {
                 throw new \RuntimeException(sprintf('Unable to parse "%s" as the file is not readable.', $resource));
             }
