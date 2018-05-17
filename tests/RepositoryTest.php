@@ -19,8 +19,9 @@ use Yosymfony\ConfigLoader\Repository;
 use Yosymfony\ConfigLoader\Loaders\TomlLoader;
 use Yosymfony\ConfigLoader\Loaders\YamlLoader;
 use Yosymfony\ConfigLoader\Loaders\JsonLoader;
+use PHPUnit\Framework\TestCase;
 
-class RepositoryTest extends \PHPUnit_Framework_TestCase
+class RepositoryTest extends TestCase
 {
     protected $config;
 
@@ -33,6 +34,46 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
             new YamlLoader($locator),
             new JsonLoader($locator),
         ));
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage This repository only accept configuration from arrays
+     */
+    public function testLoadShouldThrowInvalidArgumentException()
+    {
+        $repository = new Repository();
+        $repository->load(null);
+    }
+
+    public function testRewindShouldReturnFalse()
+    {
+        $repository = new Repository();
+        $this->assertFalse($repository->rewind());
+    }
+
+    public function testCurrentShouldReturnFalse()
+    {
+        $repository = new Repository();
+        $this->assertFalse($repository->current());
+    }
+
+    public function testKeyShouldReturnNull()
+    {
+        $repository = new Repository();
+        $this->assertNull($repository->key());
+    }
+
+    public function testNextShouldReturnNull()
+    {
+        $repository = new Repository();
+        $this->assertFalse($repository->next());
+    }
+
+    public function testValidShouldReturnFalse()
+    {
+        $repository = new Repository();
+        $this->assertFalse($repository->valid());
     }
 
     public function testRepositoryAddKey()
@@ -181,6 +222,10 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
     {
         $repository = $this->config->load("port = 25\n server = \"localhost\"", Config::TYPE_TOML);
         $repository->validateWith(new ConfigDefinitions());
+        $repoArray = $repository->getArray();
+
+        $this->assertSame(25, $repoArray['port']);
+        $this->assertSame('localhost', $repoArray['server']);
     }
 
     /**

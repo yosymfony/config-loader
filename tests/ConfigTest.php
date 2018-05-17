@@ -16,8 +16,9 @@ use Yosymfony\ConfigLoader\Config;
 use Yosymfony\ConfigLoader\Loaders\TomlLoader;
 use Yosymfony\ConfigLoader\Loaders\YamlLoader;
 use Yosymfony\ConfigLoader\Loaders\JsonLoader;
+use PHPUnit\Framework\TestCase;
 
-class ConfigTest extends \PHPUnit_Framework_TestCase
+class ConfigTest extends TestCase
 {
     protected $config;
 
@@ -30,6 +31,15 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
             new YamlLoader($locator),
             new JsonLoader($locator),
         ));
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage The Array of loaders is empty
+     */
+    public function testConstructorOnEmptyLoader()
+    {
+        $config = new Config(array());
     }
 
     public function provideFileFormats()

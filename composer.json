@@ -16,7 +16,8 @@
     },
     "require-dev": {
         "yosymfony/toml": "0.3.*@dev",
-        "symfony/yaml": "^2.7|^3.0"
+        "symfony/yaml": "^2.7|^3.0",
+        "phpunit/phpunit": "^4.8|^6.5|^7.0"
     },
     "suggest": {
         "yosymfony/toml": "0.3.*",
@@ -24,6 +25,9 @@
     },
     "autoload": {
         "psr-4": { "Yosymfony\\ConfigLoader\\": "src/" }
+    },
+    "autoload-dev": {
+        "psr-4": { "Yosymfony\\ConfigLoader\\Tests\\": "tests/" }
     },
     "extra": {
         "branch-alias": {
