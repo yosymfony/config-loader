@@ -12,7 +12,7 @@ Inspired by [Yosymfony\ConfigServiceProvider](https://github.com/yosymfony/Confi
 Installation
 ------------
 
-**Requires PHP >= 7.1.**
+**Requires PHP >= 7.2.**
 
 Use [Composer](http://getcomposer.org/) to install this package:
 
