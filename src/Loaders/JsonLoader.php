@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Yosymfony\Config-loader.
+ * This file is part of the Yosymfony config-loader.
  *
  * (c) YoSymfony <http://github.com/yosymfony>
  *
@@ -13,37 +13,41 @@ namespace Yosymfony\ConfigLoader\Loaders;
 
 use Yosymfony\ConfigLoader\ConfigFileLoader;
 use Yosymfony\ConfigLoader\Repository;
+use Yosymfony\ConfigLoader\RepositoryInterface;
 
 /**
- * JSON file loader.
+ * JSON file loader
  *
  * @author Victor Puertas <vpgugr@gmail.com>
  */
 class JsonLoader extends ConfigFileLoader
 {
+    public const TYPE = "json";
+
     /**
      * {@inheritdoc}
+     *
+     * @throws RuntimeException If JSON parse error
      */
-    public function load($resource, $type = null)
+    public function load(string $resource, string $type = null) : RepositoryInterface
     {
-        if (null === $type) {
-            $resource = $this->getLocation($resource);
-            $data = $this->loadFile($resource);
-        } else {
-            $data = $resource;
+        $resourceContent = $resource;
+
+        if (empty($type)) {
+            $file = $this->getLocation($resource);
+            $resourceContent = $this->readFile($file);
         }
 
-        $parsed = $this->parseResource($data);
+        $parsedResource = $this->parseJson($resourceContent);
         $errorMsg = $this->getLastErrorMessage(json_last_error());
 
         if ($errorMsg) {
-            $msg = $type ? sprintf('JSON parse error: %s', $errorMsg) : sprintf('JSON parse error: %s at %s', $errorMsg, $resource);
+            $msg = $type ? sprintf('JSON parse error: %s.', $errorMsg) : sprintf('JSON parse error: %s at %s', $errorMsg, $resource);
 
             throw new \RuntimeException($msg);
         }
 
-        $repository = new Repository();
-        $repository->load($parsed ? $parsed : array());
+        $repository = new Repository($parsedResource ?? []);
 
         return $this->parseImports($repository, $resource);
     }
@@ -51,35 +55,34 @@ class JsonLoader extends ConfigFileLoader
     /**
      * {@inheritdoc}
      */
-    public function supports($resource, $type = null)
+    public function supports(string $resource, string $type = null) : bool
     {
-        return 'json' === $type || (is_string($resource) && preg_match('#\.json(\.dist)?$#', $resource));
+        return $type === self::TYPE || $this->hasResourceExtension($resource, 'json');
     }
 
-    private function parseResource($resource)
+    /**
+     * @return mixed
+     */
+    private function parseJson(string $resource)
     {
         return json_decode($resource, true);
     }
 
-    private function loadFile($resource)
+    private function getLastErrorMessage(int $errorCode) : ?string
     {
-        return file_get_contents($resource);
-    }
-
-    /**
-     * @param int $errorCode
-     */
-    private function getLastErrorMessage($errorCode)
-    {
-        $errors = array(
+        $errors = [
             JSON_ERROR_NONE => null,
             JSON_ERROR_DEPTH => 'Maximum stack depth exceeded',
             JSON_ERROR_STATE_MISMATCH => 'Underflow or the modes mismatch',
             JSON_ERROR_CTRL_CHAR => 'Unexpected control character found',
             JSON_ERROR_SYNTAX => 'Syntax error, malformed JSON',
             JSON_ERROR_UTF8 => 'Malformed UTF-8 characters, possibly incorrectly encoded',
-        );
+        ];
 
-        return array_key_exists($errorCode, $errors) ? $errors[$errorCode] : sprintf('Unknown error code: %s', $errorCode);
+        if (array_key_exists($errorCode, $errors)) {
+            return $errors[$errorCode];
+        }
+
+        return sprintf('Unknown error code: "%s"', $errorCode);
     }
 }

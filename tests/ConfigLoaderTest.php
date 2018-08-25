@@ -11,13 +11,14 @@
 
 namespace Yosymfony\ConfigLoader\Tests;
 
-use Symfony\Component\Config\FileLocator;
-use Yosymfony\ConfigLoader\Config;
+use PHPUnit\Framework\TestCase;
+use Yosymfony\ConfigLoader\FileLocator;
+use Yosymfony\ConfigLoader\ConfigLoader;
 use Yosymfony\ConfigLoader\Loaders\TomlLoader;
 use Yosymfony\ConfigLoader\Loaders\YamlLoader;
 use Yosymfony\ConfigLoader\Loaders\JsonLoader;
 
-class ConfigTest extends \PHPUnit_Framework_TestCase
+class ConfigLoaderTest extends TestCase
 {
     protected $config;
 
@@ -25,11 +26,11 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
     {
         $locator = new FileLocator(array(__dir__.'/Fixtures'));
 
-        $this->config = new Config(array(
+        $this->config = new ConfigLoader([
             new TomlLoader($locator),
             new YamlLoader($locator),
             new JsonLoader($locator),
-        ));
+        ]);
     }
 
     public function provideFileFormats()
@@ -43,7 +44,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 
     public function testJsonInline()
     {
-        $repository = $this->config->load('{ "var": "my value" }', Config::TYPE_JSON);
+        $repository = $this->config->load('{ "var": "my value" }', JsonLoader::TYPE);
         $this->assertNotNull($repository);
         $this->assertEquals($repository->get('var'), 'my value');
         $this->assertEquals($repository['var'], 'my value');
@@ -52,7 +53,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 
     public function testTomlInline()
     {
-        $repository = $this->config->load('var = "my value"', Config::TYPE_TOML);
+        $repository = $this->config->load('var = "my value"', TomlLoader::TYPE);
         $this->assertNotNull($repository);
         $this->assertEquals($repository->get('var'), 'my value');
         $this->assertEquals($repository['var'], 'my value');
@@ -62,7 +63,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 
     public function testYamlInline()
     {
-        $repository = $this->config->load('var: "my value"', Config::TYPE_YAML);
+        $repository = $this->config->load('var: "my value"', YamlLoader::TYPE);
         $this->assertNotNull($repository);
         $this->assertEquals($repository->get('var'), 'my value');
         $this->assertEquals($repository['var'], 'my value');
@@ -95,7 +96,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function testJsonInlineFail()
     {
-        $repository = $this->config->load('{ "var": "value"', Config::TYPE_JSON);
+        $repository = $this->config->load('{ "var": "value"', JsonLoader::TYPE);
     }
 
     /**
@@ -103,7 +104,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function testTomlInlineFail()
     {
-        $repository = $this->config->load('var = "my value', Config::TYPE_TOML);
+        $repository = $this->config->load('var = "my value', TomlLoader::TYPE);
     }
 
     /**
@@ -111,7 +112,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function testYamlInlineFail()
     {
-        $repository = $this->config->load('var : [ elemnt', Config::TYPE_YAML);
+        $repository = $this->config->load('var : [ elemnt', YamlLoader::TYPE);
     }
 
     /**
@@ -179,5 +180,14 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('json', $repository);
         $this->assertArrayHasKey('toml', $repository);
         $this->assertArrayHasKey('yaml', $repository);
+    }
+
+    /**
+     * @expectedException Yosymfony\ConfigLoader\Exception\LoaderLoadException
+     * @expectedExceptionMessage Loader not found for the resource: "config-file.fake".
+     */
+    public function testLoadMustFailWhenLoaderNotFound() : void
+    {
+        $this->config->load('config-file.fake');
     }
 }

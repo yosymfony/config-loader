@@ -14,41 +14,46 @@ namespace Yosymfony\ConfigLoader\Loaders;
 use Symfony\Component\Yaml\Yaml;
 use Yosymfony\ConfigLoader\ConfigFileLoader;
 use Yosymfony\ConfigLoader\Repository;
+use Yosymfony\ConfigLoader\RepositoryInterface;
 
 /**
- * YAML file loader.
+ * YAML file loader
  *
  * @author Victor Puertas <vpgugr@gmail.com>
  */
 class YamlLoader extends ConfigFileLoader
 {
-    public function load($resource, $type = null)
+    public const TYPE = "yaml";
+
+    /**
+     * {@inheritdoc}
+     *
+     * @throws RuntimeException If Symfony Yaml package is not installed
+     */
+    public function load(string $resource, string $type = null) : RepositoryInterface
     {
         if (false == class_exists('Symfony\Component\Yaml\Yaml')) {
-            throw new \RuntimeException('Symfony\Component\Yaml\Yaml parser is required to read yaml files.');
+            throw new \RuntimeException('"Symfony Yaml" is required to read YAML files.');
         }
 
-        if (null === $type) {
-            $resource = $this->getLocation($resource);
+        $resourceContent = $resource;
+
+        if (empty($type)) {
+            $file = $this->getLocation($resource);
+            $resourceContent = $this->readFile($file);
         }
 
-        if ((!is_string($resource) || strlen($resource)<4096) && is_file($resource)) {
-            if (!is_readable($resource)) {
-                throw new \RuntimeException(sprintf('Unable to parse "%s" as the file is not readable.', $resource));
-            }
-
-            $resource = file_get_contents($resource);
-        }
-
-        $data = Yaml::parse($resource);
-        $repository = new Repository();
-        $repository->load($data ? $data : array());
+        $parsedResource = Yaml::parse($resourceContent);
+        $repository = new Repository($parsedResource ?? []);
 
         return $this->parseImports($repository, $resource);
     }
 
-    public function supports($resource, $type = null)
+    /**
+     * {@inheritdoc}
+     */
+    public function supports(string $resource, string $type = null) : bool
     {
-        return 'yaml' === $type || (is_string($resource) && preg_match('#\.yml(\.dist)?$#', $resource));
+        return $type === self::TYPE || $this->hasResourceExtension($resource, 'yml');
     }
 }

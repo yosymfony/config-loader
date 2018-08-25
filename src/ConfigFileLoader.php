@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Yosymfony\Config-loader.
+ * This file is part of the Yosymfony Config-loader.
  *
  * (c) YoSymfony <http://github.com/yosymfony>
  *
@@ -11,17 +11,31 @@
 
 namespace Yosymfony\ConfigLoader;
 
-use Symfony\Component\Config\Loader\FileLoader;
+use Yosymfony\ConfigLoader\Exception;
 
 /**
  * Abstract class used by built-in loaders.
  *
  * @author Victor Puertas <vpgugr@gmail.com>
  */
-abstract class ConfigFileLoader extends FileLoader
+abstract class ConfigFileLoader implements LoaderInterface
 {
+    private const DIST_EXTENSION = "dist";
+
+    /** @var LoaderResolverInterface */
+    private $loaderResolver;
+    /** @var FileLocatorInterface */
+    private $locator;
+    /** @var string */
+    private $currentDir;
+
+    public function __construct(FileLocatorInterface $locator)
+    {
+        $this->locator = $locator;
+    }
+
     /**
-     * Resolve the location of a file resource follows the next hierachy:
+     * Resolve the location of a file following the hierarchy:
      *    1. filename.ext
      *    2. filename.ext.dist (if filename.ext does not exist).
      *
@@ -35,44 +49,77 @@ abstract class ConfigFileLoader extends FileLoader
      *
      * @throws \InvalidArgumentException When the file is not found
      */
-    public function getLocation($resource)
+    public function getLocation(string $resource) : string
     {
-        if (false === $this->isDistExtension($resource)) {
+        if (!$this->isDistExtension($resource)) {
             try {
-                return $this->getLocator()->locate($resource, null, true);
+                return $this->getLocator()->locateFirst($resource, $this->currentDir);
             } catch (\InvalidArgumentException $ex) {
-                $resource = $resource.'.dist';
+                $resource = $resource.'.'.self::DIST_EXTENSION;
             }
         }
 
-        return  $this->getLocator()->locate($resource, null, true);
+        return  $this->getLocator()->locateFirst($resource, null);
     }
 
     /**
-     * Has the file resource an ".dist" extension?
+     * Sets the current directory.
+     *
+     * @param string $dir
+     */
+    public function setCurrentDir($dir)
+    {
+        $this->currentDir = $dir;
+    }
+
+    /**
+     * Returns the file locator used by this loader.
+     *
+     * @return FileLocatorInterface
+     */
+    public function getLocator() : FileLocatorInterface
+    {
+        return $this->locator;
+    }
+
+    public function setLoaderResolver(LoaderResolverInterface $loaderResolver) : void
+    {
+        $this->loaderResolver = $loaderResolver;
+    }
+
+    /**
+     * Returns the Loader Resolver implementation
+     *
+     * @return LoaderResolverInterface
+     */
+    protected function getLoaderResolver() : LoaderResolverInterface
+    {
+        return $this->loaderResolver;
+    }
+
+    /**
+     * Has the file resource a ".dist" extension?
      *
      * @param string $resource The filename
      *
      * @return bool
      */
-    public function isDistExtension($resource)
+    protected function isDistExtension(string $resource) : bool
     {
-        return 'dist' === pathinfo($resource, PATHINFO_EXTENSION);
+        return pathinfo($resource, PATHINFO_EXTENSION) === self::DIST_EXTENSION;
     }
 
     /**
-     * Parses the repositories "imports" similar to the Symfony Dependency Injector's YamlFileLoader.
+     * Parses the repositories in "imports" key
      *
      * @param Repository $repository
      * @param string     $file
      *
-     * @return array|void
+     * @return RepositoryInterface
      *
-     * @throws Exception
-     * @throws Symfony\Component\Config\Exception\FileLoaderImportCircularReferenceException
-     * @throws Symfony\Component\Config\Exception\FileLoaderLoadException
+     * @throws InvalidArgumentException If error with "imports" key
      */
-    protected function parseImports(Repository $repository, $file)
+    protected function parseImports(RepositoryInterface $repository, string $file) : RepositoryInterface
     {
         if (!isset($repository['imports'])) {
             return $repository;
@@ -84,12 +131,69 @@ abstract class ConfigFileLoader extends FileLoader
 
         foreach ($repository['imports'] as $import) {
             if (!is_array($import)) {
-                $import = array('resource' => $import);
+                $import = ['resource' => $import];
             }
+            
             $ignoreErrors = isset($import['ignore_errors']) ? (bool) $import['ignore_errors'] : false;
-            $repository = $repository->union($this->import($import['resource'], null, $ignoreErrors, $file));
+
+            $importedResource = $this->import($import['resource'], null, $ignoreErrors, $file);
+
+            if ($importedResource) {
+                $repository = $repository->union($importedResource);
+            }
         }
 
         return $repository;
+    }
+
+    /**
+     * Checks if the file has the extension passed as argument. This method
+     * is aware about "dist" files
+     *
+     * @param string $file
+     * @param string $extension Extension to check without dot. e.g: "json"
+     *
+     * @return bool
+     */
+    protected function hasResourceExtension(string $file, string $extension) : bool
+    {
+        return preg_match("#\.{$extension}(\.dist)?$#", $file) === 1;
+    }
+
+    /**
+     * Reads a file
+     *
+     * @param string $file The name of the file
+     *
+     * @return string The file's content
+     *
+     * @throws BadFileException If the file is not a file or it is not readable
+     */
+    protected function readFile(string $file) : string
+    {
+        if (is_file($file) === false) {
+            throw new BadFileException("The file \"{$file}\" is not a file.", $file);
+        }
+
+        if (is_readable($file) === false) {
+            throw new BadFileException("Unable to open \"{$file}\" as the file is not readable.", $file);
+        }
+
+        return file_get_contents($file);
+    }
+
+    private function import(string $resource, string $type = null, bool $ignoreErrors = false, string $sourceResource = null) : ?RepositoryInterface
+    {
+        $loader = $this->getLoaderResolver()->resolveLoader($resource, $type);
+
+        if ($loader === null) {
+            if (!$ignoreErrors) {
+                throw new LoaderLoadException($resource, $type);
+            }
+
+            return null;
+        }
+
+        return $loader->load($resource, $type);
     }
 }

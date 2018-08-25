@@ -11,69 +11,66 @@
 
 namespace Yosymfony\ConfigLoader;
 
-use Symfony\Component\Config\Definition\ConfigurationInterface;
-
 /**
- * Interface that must be implemented by configuration repositories.
+ * Interface for configuration repositories
  *
  * @author Victor Puertas <vpgugr@gmail.com>
  */
-interface RepositoryInterface extends RepositoryOperationInterface, \ArrayAccess, \Countable, \Iterator
+interface RepositoryInterface extends \ArrayAccess, \Countable, \Iterator
 {
     /**
-     * Loads data of the repository.
-     *
-     * @param mixed $data
-     *
-     * @throws \InvalidArgumentException When argument is not valid
-     */
-    public function load($data);
-
-    /**
-     * Returns the value associated with the key.
+     * Returns the value associated with the key or default value
      *
      * @param string $key     Key name
      * @param mixed  $default Default value
      *
      * @return mixed The value in the $key or default
      */
-    public function get($key, $default);
+    public function get(string $key, $default);
 
     /**
-     * Sets the value to a key.
+     * Sets the value to a key
      *
      * @param string $key   The key name
      * @param mixed  $value The value
+     *
+     * @return void
      */
-    public function set($key, $value);
+    public function set(string $key, $value) : void;
 
     /**
-     * Deletes a key.
+     * Deletes a key
      *
      * @param string $key Key name
+     *
+     * @return void
      */
-    public function del($key);
+    public function del(string $key) : void;
 
     /**
-     * Validates the configurations values.
+     * Performs the union between the current repository and the repository
+     * passed as argument. The repository passed as argument has less precedence.
      *
-     * @param ConfigurationInterface $definition The rules
+     * @param RepositoryInterface $repository
      *
-     * @throws \Exception If any value is not of the expected type, is mandatory and yet undefined, or could not be validated in some other way
+     * @return RepositoryInterface A new repository
      */
-    public function validateWith(ConfigurationInterface $definition);
+    public function union(RepositoryInterface $repository) : RepositoryInterface;
 
     /**
-     * Returns a raw representation of the repository.
+     * Performs the intersection between the current repository and the repository
+     * passed as argument. The repository passed as argument has less precedence.
      *
-     * @return mixed
+     * @param RepositoryInterface $repository
+     *
+     * @return RepositoryInterface A new repository
      */
-    public function getRaw();
+    public function intersection(RepositoryInterface $repository) : RepositoryInterface;
 
     /**
-     * Returns an array representation of the repository.
+     * Returns an array representation of the repository
      *
      * @return array
      */
-    public function getArray();
+    public function getArray() : array;
 }

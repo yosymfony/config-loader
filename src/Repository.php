@@ -11,9 +11,6 @@
 
 namespace Yosymfony\ConfigLoader;
 
-use Symfony\Component\Config\Definition\Processor;
-use Symfony\Component\Config\Definition\ConfigurationInterface;
-
 /**
  * Simple implementation of a configuration repository.
  *
@@ -21,24 +18,22 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
  */
 class Repository implements RepositoryInterface
 {
-    protected $repository = array();
+    protected $repository = [];
 
     /**
-     * {@inheritdoc}
+     * Construct a configuration repository from an array
+     *
+     * @param array $values
      */
-    public function load($configuration)
+    public function __construct(array $values = [])
     {
-        if (!is_array($configuration)) {
-            throw new \InvalidArgumentException('This repository only accept configuration from arrays');
-        }
-
-        $this->repository = $configuration;
+        $this->repository = $values;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function get($key, $default = null)
+    public function get(string $key, $default = null)
     {
         return isset($this->repository[$key]) ? $this->repository[$key] : $default;
     }
@@ -46,7 +41,7 @@ class Repository implements RepositoryInterface
     /**
      * {@inheritdoc}
      */
-    public function set($key, $value)
+    public function set(string $key, $value) : void
     {
         $this->offsetSet($key, $value);
     }
@@ -54,7 +49,7 @@ class Repository implements RepositoryInterface
     /**
      * {@inheritdoc}
      */
-    public function del($key)
+    public function del(string $key) : void
     {
         if (array_key_exists($key, $this->repository)) {
             unset($this->repository[$key]);
@@ -64,7 +59,7 @@ class Repository implements RepositoryInterface
     /**
      * {@inheritdoc}
      */
-    public function union(RepositoryInterface $repository)
+    public function union(RepositoryInterface $repository) : RepositoryInterface
     {
         $union = function (array $r1, array $r2) use (&$union) {
             $res = $r1;
@@ -79,16 +74,13 @@ class Repository implements RepositoryInterface
             return $res;
         };
 
-        $repo = new self();
-        $repo->load($union($this->getArray(), $repository->getArray()));
-
-        return $repo;
+        return new self($union($this->getArray(), $repository->getArray()));
     }
 
     /**
      * {@inheritdoc}
      */
-    public function intersection(RepositoryInterface $repository)
+    public function intersection(RepositoryInterface $repository) : RepositoryInterface
     {
         $interception = function ($main, $second) {
             $result = new Repository();
@@ -109,25 +101,7 @@ class Repository implements RepositoryInterface
     /**
      * {@inheritdoc}.
      */
-    public function validateWith(ConfigurationInterface $definition)
-    {
-        $processor = new Processor();
-
-        $processor->processConfiguration($definition, array($this->getArray()));
-    }
-
-    /**
-     * {@inheritdoc}.
-     */
-    public function getArray()
-    {
-        return $this->repository;
-    }
-
-    /**
-     * {@inheritdoc}.
-     */
-    public function getRaw()
+    public function getArray() : array
     {
         return $this->repository;
     }

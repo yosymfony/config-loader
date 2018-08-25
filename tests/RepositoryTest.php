@@ -11,113 +11,105 @@
 
 namespace Yosymfony\ConfigLoader\Tests;
 
-use Symfony\Component\Config\FileLocator;
-use Symfony\Component\Config\Definition\ConfigurationInterface;
-use Symfony\Component\Config\Definition\Builder\TreeBuilder;
-use Yosymfony\ConfigLoader\Config;
+use PHPUnit\Framework\TestCase;
 use Yosymfony\ConfigLoader\Repository;
-use Yosymfony\ConfigLoader\Loaders\TomlLoader;
-use Yosymfony\ConfigLoader\Loaders\YamlLoader;
-use Yosymfony\ConfigLoader\Loaders\JsonLoader;
 
-class RepositoryTest extends \PHPUnit_Framework_TestCase
+class RepositoryTest extends TestCase
 {
-    protected $config;
+    private $repository;
 
     public function setUp()
     {
-        $locator = new FileLocator(array(__dir__.'/Fixtures'));
-
-        $this->config = new Config(array(
-            new TomlLoader($locator),
-            new YamlLoader($locator),
-            new JsonLoader($locator),
-        ));
+        $this->repository = new Repository();
     }
 
-    public function testRepositoryAddKey()
+    public function testConstructMustCreateAEmptyRepository() : void
     {
         $repository = new Repository();
-        $repository['name'] = 'YoSymfony';
-
-        $this->assertEquals($repository->get('name'), 'YoSymfony');
-        $this->assertEquals($repository['name'], 'YoSymfony');
-    }
-
-    public function testRepositoryAddKeyWithSet()
-    {
-        $repository = new Repository();
-        $repository->set('name', 'YoSymfony');
-
-        $this->assertEquals($repository->get('name'), 'YoSymfony');
-        $this->assertEquals($repository['name'], 'YoSymfony');
-    }
-
-    public function testRepositoryGetWithDefault()
-    {
-        $repository = new Repository();
-
-        $this->assertEquals($repository->get('name', 'no-val'), 'no-val');
-        $this->assertEquals($repository->get('name', true), true);
-        $this->assertEquals($repository->get('name', false), false);
-        $this->assertEquals($repository->get('name', 10), 10);
-        $this->assertEquals($repository->get('name', 1.0), 1.0);
-        $this->assertEquals($repository->get('name', null), null);
-    }
-
-    public function testRespositoryGetRaw()
-    {
-        $repository = new Repository();
-        $this->assertTrue(is_array($repository->getRaw()));
-
-        $repository['val'] = 'value';
-        $this->assertCount(1, $repository->getRaw());
-    }
-
-    public function testRespositoryGetArray()
-    {
-        $repository = new Repository();
-        $this->assertTrue(is_array($repository->getArray()));
-
-        $repository['val'] = 'value';
-        $this->assertCount(1, $repository->getArray());
-    }
-
-    public function testRepositoryUnsetKey()
-    {
-        $repository = new Repository();
-        $repository['val'] = 'value';
-        unset($repository['val']);
 
         $this->assertCount(0, $repository);
     }
 
-    public function testRepositoryDeleteKey()
+    public function testConstructMustCreateARepositoryWithElements() : void
     {
-        $repository = new Repository();
-        $repository['val'] = 'value';
-        $repository->del('val');
+        $key = 'name';
+        $value = 'Víctor';
+        $repository = new Repository([$key => $value]);
 
-        $this->assertCount(0, $repository);
+        $this->assertCount(1, $repository);
+        $this->assertEquals($value, $repository[$key]);
     }
 
-    public function testRepositoryNullKey()
+    public function testSetMustSetTheValueOfAKey() : void
     {
-        $repository = new Repository();
-        $repository[null] = 1;
+        $key = 'name';
+        $value = 'Víctor';
+        $this->repository->set($key, $value);
 
-        $this->assertEquals($repository[0], 1);
+        $this->assertEquals($value, $this->repository[$key]);
     }
 
-    public function testRepositorySetNullKey()
+    public function testOffsetGetMustReturnTheValueAssociatedWithTheKey() : void
     {
-        $repository = new Repository();
-        $repository->set(null, 1);
+        $key = 'name';
+        $value = 'Víctor';
+        $this->repository->set($key, $value);
 
-        $this->assertEquals($repository[0], 1);
+        $this->assertEquals($value, $this->repository[$key]);
     }
 
-    public function testRepositoryUnion()
+    public function testGetMustReturnTheValueAssociatedWithTheKey() : void
+    {
+        $key = 'name';
+        $value = 'Víctor';
+        $this->repository->set($key, $value);
+
+        $this->assertEquals($value, $this->repository->get($key));
+    }
+
+    public function testGetMustReturnDefaultValueWhenKeyNotFound() : void
+    {
+        $defaultValue = '';
+        $this->assertEquals($defaultValue, $this->repository->get('fool', $defaultValue));
+    }
+
+    public function testGetMustReturnNullWhenKeyNotFoundAndADefaultValueWasNotSet() : void
+    {
+        $this->assertNull($this->repository->get('fool'));
+    }
+
+    public function testGetArrayMustReturnAnArrayWithTheRepositoryValues() : void
+    {
+        $key = 'name';
+        $value = 'Víctor';
+
+        $this->repository[$key] = $value;
+
+        $this->assertEquals([
+            $key => $value,
+        ], $this->repository->getArray());
+    }
+
+    public function testOffsetUnsetMustUnsetTheKey() : void
+    {
+        $key = 'name';
+        $this->repository[$key] = 'Víctor';
+
+        unset($this->repository[$key]);
+
+        $this->assertCount(0, $this->repository);
+    }
+
+    public function testDelMustDeleteTheKey() : void
+    {
+        $this->repository['val'] = 'value';
+
+        $this->repository->del('val');
+
+        $this->assertCount(0, $this->repository);
+    }
+
+    public function testUnionMustReturnTheUnionOfTwoRepositories()
     {
         $repositoryA = new Repository();
         $repositoryA['port'] = 25;
@@ -125,38 +117,19 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
 
         $repositoryB = new Repository();
         $repositoryB['port'] = 24;
-        $repositoryB['server'] = 'mail.yourname.com';
+        $repositoryB['server'] = 'yourname.com';
         $repositoryB['secure'] = true;
 
         $union = $repositoryA->union($repositoryB);
-        $this->assertInstanceOf('Yosymfony\ConfigLoader\RepositoryInterface', $union);
-        $this->assertCount(3, $union);
-        $this->assertEquals($union['port'], 25);
-        $this->assertEquals($union['server'], 'localhost');
-        $this->assertEquals($union['secure'], true);
 
-        $this->assertCount(2, $repositoryA);
+        $this->assertEquals(new Repository([
+            'port' => 25,
+            'server' => 'localhost',
+            'secure' => true,
+        ]), $union);
     }
 
-    public function testRepositoryUnionMainMinor()
-    {
-        $repositoryA = new Repository();
-        $repositoryA['port'] = 25;
-
-        $repositoryB = new Repository();
-        $repositoryB['port'] = 24;
-        $repositoryB['server'] = 'mail.yourname.com';
-        $repositoryB['secure'] = true;
-
-        $union = $repositoryA->union($repositoryB);
-        $this->assertInstanceOf('Yosymfony\ConfigLoader\RepositoryInterface', $union);
-        $this->assertCount(3, $union);
-        $this->assertEquals($union['port'], 25);
-        $this->assertEquals($union['server'], 'mail.yourname.com');
-        $this->assertEquals($union['secure'], true);
-    }
-
-    public function testRepositoryIntersection()
+    public function testIntersectionMustReturnTheIntersectionOfTwoRepositories()
     {
         $repositoryA = new Repository();
         $repositoryA['port'] = 25;
@@ -164,67 +137,14 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
 
         $repositoryB = new Repository();
         $repositoryB['port'] = 24;
-        $repositoryB['server'] = 'mail.yourname.com';
+        $repositoryB['server'] = 'yourname.com';
         $repositoryB['secure'] = true;
 
         $intersection = $repositoryA->intersection($repositoryB);
-        $this->assertInstanceOf('Yosymfony\ConfigLoader\RepositoryInterface', $intersection);
-        $this->assertCount(2, $intersection);
-        $this->assertEquals($intersection['port'], 25);
-        $this->assertEquals($intersection['server'], 'localhost');
-        $this->assertArrayNotHasKey('secure', $intersection);
 
-        $this->assertCount(2, $repositoryA);
-    }
-
-    public function testRepositoryDefinitions()
-    {
-        $repository = $this->config->load("port = 25\n server = \"localhost\"", Config::TYPE_TOML);
-        $repository->validateWith(new ConfigDefinitions());
-    }
-
-    /**
-     * @expectedException Symfony\Component\Config\Definition\Exception\InvalidTypeException
-     */
-    public function testRepositoryFailDefinitions()
-    {
-        $repository = $this->config->load("port = \"25\"\n server = \"localhost\"", Config::TYPE_TOML);
-        $repository->validateWith(new ConfigDefinitions());
-    }
-
-    public function testRepositoryUnionIsRecursive()
-    {
-        $r1 = $this->config->load('config-merge-to.json');
-        $r2 = $this->config->load('config-merge-from.json');
-        $r3 = $r1->union($r2);
-        $expected = array(
-            'default' => array(
-                'port' => 25,
-                'server' => 'mail.example.com',
-            ),
-        );
-
-        $this->assertEquals($expected, $r3->getArray());
-    }
-}
-
-/**
- * Configuration Definitions rules example for test purpose.
- */
-class ConfigDefinitions implements ConfigurationInterface
-{
-    public function getConfigTreeBuilder()
-    {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root(0);
-
-        $rootNode->children()
-            ->integerNode('port')
-                ->end()
-            ->scalarNode('server')
-                ->end()
-        ->end();
-
-        return $treeBuilder;
+        $this->assertEquals(new Repository([
+            'port' => 25,
+            'server' => 'localhost',
+        ]), $intersection);
     }
 }

@@ -14,33 +14,46 @@ namespace Yosymfony\ConfigLoader\Loaders;
 use Yosymfony\Toml\Toml;
 use Yosymfony\ConfigLoader\ConfigFileLoader;
 use Yosymfony\ConfigLoader\Repository;
+use Yosymfony\ConfigLoader\RepositoryInterface;
 
 /**
- * TOML file loader.
+ * TOML file loader
  *
  * @author Victor Puertas <vpgugr@gmail.com>
  */
 class TomlLoader extends ConfigFileLoader
 {
-    public function load($resource, $type = null)
+    public const TYPE = "toml";
+
+    /**
+     * {@inheritdoc}
+     *
+     * @throws RuntimeException If Yosymfony Toml package is not installed
+     */
+    public function load(string $resource, string $type = null) : RepositoryInterface
     {
-        if (false == class_exists('Yosymfony\Toml\Toml')) {
-            throw new \RuntimeException('Yosymfony\Toml parser is required to read toml files.');
+        if (class_exists('Yosymfony\Toml\Toml') === false) {
+            throw new \RuntimeException('"Yosymfony Toml" is required to read TOML files.');
         }
 
-        if (null === $type) {
-            $resource = $this->getLocation($resource);
+        $resourceContent = $resource;
+        
+        if (empty($type)) {
+            $file = $this->getLocation($resource);
+            $resourceContent = $this->readFile($file);
         }
 
-        $data = Toml::parse($resource);
-        $repository = new Repository();
-        $repository->load($data ? $data : array());
+        $parsedResource = Toml::parse($resourceContent);
+        $repository = new Repository($parsedResource ?? []);
 
         return $this->parseImports($repository, $resource);
     }
 
-    public function supports($resource, $type = null)
+    /**
+     * {@inheritdoc}
+     */
+    public function supports(string $resource, string $type = null) : bool
     {
-        return 'toml' === $type || (is_string($resource) && preg_match('#\.toml(\.dist)?$#', $resource));
+        return $type === self::TYPE || $this->hasResourceExtension($resource, 'toml');
     }
 }
