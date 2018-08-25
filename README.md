@@ -17,7 +17,7 @@ Installation
 Use [Composer](http://getcomposer.org/) to install this package:
 
 ```bash
-composer require yosymfony/toml
+composer require yosymfony/config-loader
 ```
 
 Usage
