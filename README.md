@@ -1,11 +1,9 @@
 Config loader for PHP
 =====================
 
-A configuration loader with support for YAML, TOML (0.4.0) and JSON.
+An agnostics configuration loader with support built-in loader for YAML, TOML and JSON.
 
-Inspired by [Yosymfony\ConfigServiceProvider](https://github.com/yosymfony/ConfigServiceProvider).
-
-[![Build Status](https://travis-ci.org/yosymfony/Config-loader.png?branch=master)](https://travis-ci.org/yosymfony/Config-loader)
+[![Build Status](https://travis-ci.org/yosymfony/config-loader.png?branch=master)](https://travis-ci.org/yosymfony/Config-loader)
 [![Latest Stable Version](https://poser.pugx.org/yosymfony/config-loader/v/stable.png)](https://packagist.org/packages/yosymfony/config-loader)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/yosymfony/Config-loader/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/yosymfony/Config-loader/?branch=master)
 
@@ -23,26 +21,63 @@ composer require yosymfony/config-loader
 Usage
 -----
 
+### Initialization
+The class `ConfigLoader` is in charge of load your configuration resources. It expects a list of configuration
+loaders in its constructor. You can pass to it only those loader you need:
+
 ```php
 use Yosymfony\ConfigLoader\FileLocator;
 use Yosymfony\ConfigLoader\ConfigLoader;
 
-// Set up the paths
-$locator = new FileLocator(array('/path-to-your-files-1', '/path-to-your-files-2'));
+// The file locator uses an array of pre-defined paths to find files
+$locator = new FileLocator(['/path1', '/path2']);
 
-// Set up the config loader you need:
+// Set up the ConfigLoader to work with YAML and TOML configuration files:
 $config = new ConfigLoader([
-    new TomlLoader($locator),
     new YamlLoader($locator),
-    new JsonLoader($locator),
+    new TomlLoader($locator),
 ]);
 ```
 
-### Loading a configuration file:
+#### Loader availables
+##### Yaml loader
+  **Requires**: Symfony YAML component:
+  ```bash
+  composer require symfony/yaml
+  ```
+
+  Initialization:
+  ```php
+  $config = new ConfigLoader([
+    new YamlLoader($locator),
+  ]);
+  ```
+
+##### Toml loader
+  **Requires**: Symfony YAML component:
+  ```bash
+  composer require yosymfony/toml
+  ```
+
+  Initialization:
+  ```php
+  $config = new ConfigLoader([
+    new TomlLoader($locator),
+  ]);
+  ```
+##### Json loader
+  Initialization:
+  ```php
+  $config = new ConfigLoader([
+    new JsonLoader($locator),
+  ]);
+  ```
+### Loading configuration files:
 
 ```php
+// Search this file in "path1" and "path2":
 $config->load('user.yml');
-// or load with absolute path:
+// or load a file using its absolute path:
 $config->load('/var/config/user1.yml');
 ```
 
@@ -55,10 +90,11 @@ This library has support for `.dist` files. The filename is resolved following t
 
 ### Loading inline configuration:
 
+To parse inline configurations you just need to set the configuration text as first argument instead of the filename 
+and set the syntax type as second argument:
+
 ```php    
-$repository = $config->load('server: "mail.yourname.com"', Config::TYPE_YAML);
-// or
-$repository = $config->load('server = "mail.yourname.com"', Config::TYPE_TOML);
+$repository = $config->load('server: "your-name.com"', YamlLoader::TYPE);
 ```
 
 ### Importing files
@@ -100,8 +136,11 @@ that implements the array access interface and exposes methods for working
 with configuration values
 
 ```php
-$repository->get('name', 'noname'); // If 'name' doesn't exists it returns 'noname'
-$repository['name']; // Get the element in 'name' key
+// Returns the value associeted with key "name" or the default value in case not found
+$repository->get('name', 'default');
+
+// Do the same that the previous sentence but using array notation
+$repository['name'];
 ```
 
 ### Operations
@@ -127,7 +166,7 @@ The values of `$repositoryB` have less priority than values `$repositoryA`.
 
 ### Creating a blank repository
 
-Creating a blank repository is too easy. You only need to create a instance of
+Creating a blank repository is too easy. You just need to create a instance of
 a `Repository` class:
 
 ```php
@@ -135,10 +174,11 @@ use Yosymfony\Config-loader\Repository;
 
 //...
 
-$repository = new Repository();
-$repository->set('key1', 'value1');
-// or
-$repository['key1'] = 'value1';
+$repository = new Repository([
+  'name' => 'Yo! Symfony',
+]);
+
+$repository->set('server', 'your-name.com');
 ```
 
 Unit tests
@@ -151,7 +191,8 @@ $ cd toml
 $ composer test
 ```
 
-## License
+License
+-------
 
 This library is open-sourced software licensed under the
 [MIT license](http://opensource.org/licenses/MIT).
