@@ -39,7 +39,7 @@ $config = new ConfigLoader([
 ]);
 ```
 
-#### Loader availables
+#### Loader available
 ##### Yaml loader
   **Requires**: Symfony YAML component:
   ```bash
