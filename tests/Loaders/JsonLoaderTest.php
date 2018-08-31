@@ -23,7 +23,7 @@ class JsonLoaderTest extends TestCase
 
     public function setUp() : void
     {
-        $locator = new FileLocator(array(__dir__.'/../Fixtures'));
+        $locator = new FileLocator(array(__dir__.'/../fixtures'));
         $this->loader = new JsonLoader($locator);
     }
 
@@ -63,7 +63,7 @@ class JsonLoaderTest extends TestCase
 
     /**
      * @expectedException Yosymfony\ConfigLoader\Exception\FileNotFoundException
-     * @expectedExceptionMessage The file "fakeFile.json.dist" does not exist in: /home/vagrant/Code/config-loader/tests/Loaders/../Fixtures.
+     * @expectedExceptionMessage The file "fakeFile.json.dist" does not exist in: /home/vagrant/Code/config-loader/tests/Loaders/../fixtures.
      */
     public function testLoadMustFailWhenTheFileDoesNotExists() : void
     {
