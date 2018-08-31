@@ -3,7 +3,7 @@ Config loader for PHP
 
 An agnostics configuration loader with support built-in loader for YAML, TOML and JSON.
 
-[![Build Status](https://travis-ci.org/yosymfony/config-loader.png?branch=master)](https://travis-ci.org/yosymfony/Config-loader)
+[![Build Status](https://travis-ci.org/yosymfony/config-loader.png?branch=master)](https://travis-ci.org/yosymfony/config-loader)
 [![Latest Stable Version](https://poser.pugx.org/yosymfony/config-loader/v/stable.png)](https://packagist.org/packages/yosymfony/config-loader)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/yosymfony/Config-loader/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/yosymfony/Config-loader/?branch=master)
 
