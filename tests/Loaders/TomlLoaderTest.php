@@ -63,7 +63,7 @@ class TomlLoaderTest extends TestCase
 
     /**
      * @expectedException Yosymfony\ConfigLoader\Exception\FileNotFoundException
-     * @expectedExceptionMessage The file "fakeFile.toml.dist" does not exist in: /home/vagrant/Code/config-loader/tests/Loaders/../fixtures.
+     * @expectedExceptionMessage The file "fakeFile.toml.dist" does not exist
      */
     public function testLoadMustFailWhenTheFileDoesNotExists() : void
     {

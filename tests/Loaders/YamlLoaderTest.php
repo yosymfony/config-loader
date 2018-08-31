@@ -63,7 +63,7 @@ class YamlLoaderTest extends TestCase
 
     /**
      * @expectedException Yosymfony\ConfigLoader\Exception\FileNotFoundException
-     * @expectedExceptionMessage The file "fakeFile.yml.dist" does not exist in: /home/vagrant/Code/config-loader/tests/Loaders/../fixtures.
+     * @expectedExceptionMessage The file "fakeFile.yml.dist" does not exist
      */
     public function testLoadMustFailWhenTheFileDoesNotExists() : void
     {
