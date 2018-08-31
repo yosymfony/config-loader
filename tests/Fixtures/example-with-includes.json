@@ -1,0 +1,6 @@
+{
+    "imports": [
+        "example.json"
+    ],
+    "server" : "myexample.com"
+}

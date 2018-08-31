@@ -110,9 +110,9 @@ class FileLocator implements FileLocatorInterface
         return false;
     }
 
-    private function throwFileNotFoundException(string $name, array $paths = [], array $notFoundPaths = []) : void
+    private function throwFileNotFoundException(string $file, array $paths = [], array $notFoundPaths = []) : void
     {
-        $message = "The file \"{$name}\" does not exist";
+        $message = "The file \"{$file}\" does not exist";
 
         if (\count($paths) === 0) {
             $notFoundPaths[] = $file;

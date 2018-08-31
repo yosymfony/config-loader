@@ -1,0 +1,5 @@
+---
+imports:
+  - example.yml
+
+server: "myexample.com"

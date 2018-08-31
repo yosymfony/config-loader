@@ -1,5 +1,0 @@
----
-imports:
-  - config-imported.yml
-  - config-imported.toml
-  - config-imported.json

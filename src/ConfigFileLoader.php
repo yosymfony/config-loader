@@ -20,7 +20,8 @@ use Yosymfony\ConfigLoader\Exception;
  */
 abstract class ConfigFileLoader implements LoaderInterface
 {
-    private const DIST_EXTENSION = "dist";
+    private const DIST_EXTENSION = 'dist';
+    private const IMPORT_KEY = 'imports';
 
     /** @var LoaderResolverInterface */
     private $loaderResolver;
@@ -121,15 +122,17 @@ abstract class ConfigFileLoader implements LoaderInterface
      */
     protected function parseImports(RepositoryInterface $repository, string $file) : RepositoryInterface
     {
-        if (!isset($repository['imports'])) {
+        if (!isset($repository[self::IMPORT_KEY])) {
             return $repository;
         }
 
-        if (!is_array($repository['imports'])) {
-            throw new \InvalidArgumentException(sprintf('The "imports" key should contain an array in %s. Check your YAML syntax.', $file));
+        if (!is_array($repository[self::IMPORT_KEY])) {
+            $keyName = self::IMPORT_KEY;
+            $message = "The \"{$keyName}\" key should contain an array in {$file}. Check your YAML syntax.";
+            throw new \InvalidArgumentException($message);
         }
 
-        foreach ($repository['imports'] as $import) {
+        foreach ($repository[self::IMPORT_KEY] as $import) {
             if (!is_array($import)) {
                 $import = ['resource' => $import];
             }
@@ -142,6 +145,8 @@ abstract class ConfigFileLoader implements LoaderInterface
                 $repository = $repository->union($importedResource);
             }
         }
+
+        $repository->del(self::IMPORT_KEY);
 
         return $repository;
     }
