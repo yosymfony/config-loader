@@ -1,7 +1,7 @@
 Config loader for PHP
 =====================
 
-An agnostics configuration loader with support built-in loader for YAML, TOML and JSON.
+An agnostics configuration loader with built-in loaders for YAML, TOML and JSON.
 
 [![Build Status](https://travis-ci.org/yosymfony/config-loader.png?branch=master)](https://travis-ci.org/yosymfony/config-loader)
 [![Latest Stable Version](https://poser.pugx.org/yosymfony/config-loader/v/stable.png)](https://packagist.org/packages/yosymfony/config-loader)
@@ -22,14 +22,14 @@ Usage
 -----
 
 ### Initialization
-The class `ConfigLoader` is in charge of load your configuration resources. It expects a list of configuration
-loaders in its constructor. You can pass to it only those loader you need:
+The class `ConfigLoader` let you load your configuration resources. It expects a list of
+loaders in the constructor so you can pass to it only those ones you need:
 
 ```php
 use Yosymfony\ConfigLoader\FileLocator;
 use Yosymfony\ConfigLoader\ConfigLoader;
 
-// The file locator uses an array of pre-defined paths to find files
+// The file locator uses an array of pre-defined paths to find files:
 $locator = new FileLocator(['/path1', '/path2']);
 
 // Set up the ConfigLoader to work with YAML and TOML configuration files:
@@ -39,9 +39,9 @@ $config = new ConfigLoader([
 ]);
 ```
 
-#### available loaders
-##### Yaml loader
-  **Requires**: Symfony YAML component:
+### Available loaders
+#### Yaml loader
+  **Requires**: [Symfony YAML](https://github.com/symfony/yaml) component:
   ```bash
   composer require symfony/yaml
   ```
@@ -53,8 +53,8 @@ $config = new ConfigLoader([
   ]);
   ```
 
-##### Toml loader
-  **Requires**: Symfony YAML component:
+#### Toml loader
+  **Requires**: [Toml](https://github.com/yosymfony/toml) component:
   ```bash
   composer require yosymfony/toml
   ```
@@ -65,7 +65,7 @@ $config = new ConfigLoader([
     new TomlLoader($locator),
   ]);
   ```
-##### Json loader
+#### Json loader
   Initialization:
   ```php
   $config = new ConfigLoader([
