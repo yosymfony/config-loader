@@ -91,7 +91,7 @@ This library has support for `.dist` files. The filename is resolved following t
 ### Loading inline configuration:
 
 To parse inline configurations you just need to set the configuration text as first argument instead of the filename 
-and set the syntax type as second argument:
+and set the format type as second one:
 
 ```php    
 $repository = $config->load('server: "your-name.com"', YamlLoader::TYPE);
@@ -132,8 +132,8 @@ Repository
 ----------
 
 A configuration file is loaded into a repository. A repository is a wrapper
-that implements the array access interface and exposes methods for working
-with configuration values
+that implements the [ArrayAccess interface](http://php.net/manual/en/class.arrayaccess.php) and exposes methods for working
+with configuration values.
 
 ```php
 // Returns the value associeted with key "name" or the default value in case not found
@@ -162,7 +162,7 @@ You can performs the intersection of a repository A with another B into C as res
 $resultC = $repositoryA->intersection($repositoryB);
 ```
 
-The values of `$repositoryB` have less priority than values `$repositoryA`.
+The values of `$repositoryB` have less priority than values in `$repositoryA`.
 
 ### Creating a blank repository
 
