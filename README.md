@@ -45,40 +45,40 @@ $config = new ConfigLoader([
 #### Yaml loader
   **Requires**: [Symfony YAML](https://github.com/symfony/yaml) component:
   ```bash
-  composer require symfony/yaml
+composer require symfony/yaml
   ```
 
   Initialization:
   ```php
-	use Yosymfony\ConfigLoader\Loaders\YamlLoader;
+use Yosymfony\ConfigLoader\Loaders\YamlLoader;
 
-	$config = new ConfigLoader([
-    new YamlLoader($locator),
-  ]);
+$config = new ConfigLoader([
+	new YamlLoader($locator),
+]);
   ```
 
 #### Toml loader
   **Requires**: [Toml](https://github.com/yosymfony/toml) component:
   ```bash
-  composer require yosymfony/toml
+composer require yosymfony/toml
   ```
 
   Initialization:
   ```php
-	use Yosymfony\ConfigLoader\Loaders\TomlLoader;
+use Yosymfony\ConfigLoader\Loaders\TomlLoader;
 
-	$config = new ConfigLoader([
-    new TomlLoader($locator),
-  ]);
+$config = new ConfigLoader([
+	new TomlLoader($locator),
+]);
   ```
 #### Json loader
   Initialization:
   ```php
-	use Yosymfony\ConfigLoader\Loaders\JsonLoader;
+use Yosymfony\ConfigLoader\Loaders\JsonLoader;
 
-	$config = new ConfigLoader([
-    new JsonLoader($locator),
-  ]);
+$config = new ConfigLoader([
+	new JsonLoader($locator),
+]);
   ```
 ### Loading configuration files:
 
