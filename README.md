@@ -28,6 +28,8 @@ loaders in the constructor so you can pass to it only those ones you need:
 ```php
 use Yosymfony\ConfigLoader\FileLocator;
 use Yosymfony\ConfigLoader\ConfigLoader;
+use Yosymfony\ConfigLoader\Loaders\YamlLoader;
+use Yosymfony\ConfigLoader\Loaders\TomlLoader;
 
 // The file locator uses an array of pre-defined paths to find files:
 $locator = new FileLocator(['/path1', '/path2']);
@@ -48,7 +50,9 @@ $config = new ConfigLoader([
 
   Initialization:
   ```php
-  $config = new ConfigLoader([
+	use Yosymfony\ConfigLoader\Loaders\YamlLoader;
+
+	$config = new ConfigLoader([
     new YamlLoader($locator),
   ]);
   ```
@@ -61,14 +65,18 @@ $config = new ConfigLoader([
 
   Initialization:
   ```php
-  $config = new ConfigLoader([
+	use Yosymfony\ConfigLoader\Loaders\TomlLoader;
+
+	$config = new ConfigLoader([
     new TomlLoader($locator),
   ]);
   ```
 #### Json loader
   Initialization:
   ```php
-  $config = new ConfigLoader([
+	use Yosymfony\ConfigLoader\Loaders\JsonLoader;
+
+	$config = new ConfigLoader([
     new JsonLoader($locator),
   ]);
   ```
