@@ -28,6 +28,8 @@ loaders in the constructor so you can pass to it only those ones you need:
 ```php
 use Yosymfony\ConfigLoader\FileLocator;
 use Yosymfony\ConfigLoader\ConfigLoader;
+use Yosymfony\ConfigLoader\Loaders\YamlLoader;
+use Yosymfony\ConfigLoader\Loaders\TomlLoader;
 
 // The file locator uses an array of pre-defined paths to find files:
 $locator = new FileLocator(['/path1', '/path2']);
@@ -43,34 +45,40 @@ $config = new ConfigLoader([
 #### Yaml loader
   **Requires**: [Symfony YAML](https://github.com/symfony/yaml) component:
   ```bash
-  composer require symfony/yaml
+composer require symfony/yaml
   ```
 
   Initialization:
   ```php
-  $config = new ConfigLoader([
-    new YamlLoader($locator),
-  ]);
+use Yosymfony\ConfigLoader\Loaders\YamlLoader;
+
+$config = new ConfigLoader([
+	new YamlLoader($locator),
+]);
   ```
 
 #### Toml loader
   **Requires**: [Toml](https://github.com/yosymfony/toml) component:
   ```bash
-  composer require yosymfony/toml
+composer require yosymfony/toml
   ```
 
   Initialization:
   ```php
-  $config = new ConfigLoader([
-    new TomlLoader($locator),
-  ]);
+use Yosymfony\ConfigLoader\Loaders\TomlLoader;
+
+$config = new ConfigLoader([
+	new TomlLoader($locator),
+]);
   ```
 #### Json loader
   Initialization:
   ```php
-  $config = new ConfigLoader([
-    new JsonLoader($locator),
-  ]);
+use Yosymfony\ConfigLoader\Loaders\JsonLoader;
+
+$config = new ConfigLoader([
+	new JsonLoader($locator),
+]);
   ```
 ### Loading configuration files:
 
